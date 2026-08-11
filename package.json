@@ -1,9 +1,21 @@
 {
-  "name": "botwa-base",
+  "name": "artoria-md",
   "version": "1.0.0",
-  "description": "Base WhatsApp Multi-Device Bot Starter Kit with Bun/Node.js Hot Reload & ArtoriaMessage Engine",
+  "description": "Artoria - MD: WhatsApp Multi-Device bot base using Baileys 7rc14, featuring in-memory hot reload, ArtoriaMessage rich message engine, web dashboard, and REST API. By Nagisa Artoria.",
   "main": "index.js",
   "type": "module",
+  "author": "Nagisa Artoria",
+  "license": "MIT",
+  "keywords": [
+    "whatsapp",
+    "whatsapp-bot",
+    "baileys",
+    "baileys-7rc14",
+    "whatsapp-md",
+    "bot-base",
+    "hot-reload",
+    "bun"
+  ],
   "scripts": {
     "start": "bun index.js",
     "dev": "bun index.js",
