@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="en" class="h-full">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>BotWA Base | Command Center</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        sakura: { 50: '#FFF5F7', 100: '#FFE4E9', 200: '#FFCCD5', 300: '#FFA0B2', 400: '#FF758F', 500: '#FF4D6D' },
+                        matcha: { 50: '#F4F9F4', 100: '#E8F5E9', 200: '#C8E6C9', 300: '#A5D6A7', 400: '#81C784', 500: '#66BB6A' },
+                        lavender: { 50: '#FBF7FE', 100: '#F3E8FF', 200: '#E9D5FF', 300: '#D8B4FE', 400: '#C084FC' },
+                        cream: { 50: '#FFFEFA', 100: '#FAF7F2', 200: '#F5EFE6', 300: '#EADBC8', 400: '#DAC0A3' },
+                        sumi: { 800: '#2D3748', 900: '#1A202C', 950: '#0F172A' }
+                    },
+                    fontFamily: { sans: ['"Plus Jakarta Sans"', 'sans-serif'], mono: ['"JetBrains Mono"', 'monospace'] }
+                }
+            }
+        }
+    </script>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="h-[100dvh] bg-cream-100 text-sumi-800 font-sans antialiased overflow-hidden">
+    <div class="relative z-10 flex h-full flex-col md:flex-row overflow-hidden">
+        <aside class="hidden md:flex w-64 bg-white/85 backdrop-blur-md border-r border-sakura-100 flex-col z-30 shadow-sm">
+            <div class="p-5 border-b border-sakura-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-sakura-400 to-sakura-200 flex items-center justify-center text-white shadow-md shadow-sakura-200">
+                        <i class="ph-duotone ph-robot text-2xl"></i>
+                    </div>
+                    <div>
+                        <h1 class="font-bold text-lg text-sumi-900 tracking-wide">BotWA Base</h1>
+                        <p class="text-[10px] text-sakura-400 font-semibold tracking-widest uppercase">Starter Kit v1.0</p>
+                    </div>
+                </div>
+            </div>
+            
+            <nav class="flex-1 p-3 space-y-1 overflow-y-auto">
+                <a href="#" class="nav-item active flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold" data-view="dashboard">
+                    <div class="flex items-center gap-3"><i class="ph-duotone ph-squares-four text-base"></i><span>Dashboard</span></div>
+                </a>
+                <a href="#" class="nav-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-sumi-800/70 hover:bg-sakura-50" data-view="terminal">
+                    <div class="flex items-center gap-3"><i class="ph-duotone ph-terminal-window text-base"></i><span>Web Terminal</span></div>
+                </a>
+                <a href="#" class="nav-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-sumi-800/70 hover:bg-sakura-50" data-view="console">
+                    <div class="flex items-center gap-3"><i class="ph-duotone ph-code text-base"></i><span>Sys Console</span></div>
+                </a>
+                <a href="#" class="nav-item flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-sumi-800/70 hover:bg-sakura-50" data-view="plugins">
+                    <div class="flex items-center gap-3"><i class="ph-duotone ph-plug text-base"></i><span>Plugins</span></div>
+                </a>
+            </nav>
+
+            <div class="p-3.5 m-3 rounded-2xl bg-sakura-50 border border-sakura-100">
+                <div class="flex items-center justify-between mb-1.5">
+                    <span class="text-[10px] font-bold text-sumi-800/80 uppercase tracking-wider">WebSocket</span>
+                    <span id="statusDot" class="inline-flex rounded-full h-2.5 w-2.5 bg-matcha-500"></span>
+                </div>
+                <p id="statusText" class="text-[11px] text-sumi-800/70 font-mono">WS Connected</p>
+            </div>
+        </aside>
+
+        <div class="flex-1 flex flex-col h-full overflow-hidden">
+            <header class="h-14 sm:h-16 bg-white/75 backdrop-blur-md border-b border-sakura-100 px-4 flex items-center justify-between">
+                <h2 class="font-bold text-base text-sumi-900">BotWA Base Command Center</h2>
+                <div class="flex items-center gap-2">
+                    <button id="btnQuickTerminal" class="px-3 py-1.5 rounded-xl bg-sakura-50 text-sakura-500 border border-sakura-200 text-xs font-semibold">Terminal</button>
+                    <button id="btnClearLogs" class="px-3 py-1.5 rounded-xl bg-cream-50 text-sumi-800/70 border border-cream-300 text-xs font-semibold">Clear</button>
+                </div>
+            </header>
+
+            <main class="flex-1 overflow-y-auto p-4 sm:p-6 relative">
+                <section id="view-dashboard" class="view-section active space-y-4">
+                    <div class="p-6 rounded-3xl bg-gradient-to-r from-sakura-100/80 to-matcha-100/60 border border-sakura-200/50">
+                        <h3 class="text-xl font-bold text-sumi-900">BotWA Base Starter Kit</h3>
+                        <p class="text-xs text-sumi-800/70 mt-1">Universal Bun & Node.js Hot Reload Engine with ArtoriaMessage 24 payload serializer.</p>
+                    </div>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+                        <div class="p-4 rounded-3xl bg-white border border-sakura-100">
+                            <span class="text-xs font-bold text-sumi-800/60 uppercase">Uptime</span>
+                            <div id="valUptime" class="text-xl font-bold font-mono text-sumi-900">0s</div>
+                        </div>
+                        <div class="p-4 rounded-3xl bg-white border border-sakura-100">
+                            <span class="text-xs font-bold text-sumi-800/60 uppercase">Total Hits</span>
+                            <div id="valHits" class="text-xl font-bold font-mono text-sumi-900">0</div>
+                        </div>
+                        <div class="p-4 rounded-3xl bg-white border border-sakura-100">
+                            <span class="text-xs font-bold text-sumi-800/60 uppercase">Latency</span>
+                            <div id="valLatency" class="text-xl font-bold font-mono text-sumi-900">0 ms</div>
+                        </div>
+                        <div class="p-4 rounded-3xl bg-white border border-sakura-100">
+                            <span class="text-xs font-bold text-sumi-800/60 uppercase">RAM (RSS)</span>
+                            <div id="valMemory" class="text-base font-bold font-mono text-sumi-900">0 MB</div>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-terminal" class="view-section hidden h-full">
+                    <div class="h-full flex flex-col bg-sumi-950 rounded-3xl border border-sakura-200/40 font-mono">
+                        <div class="px-4 py-2.5 bg-sumi-900 border-b border-sumi-800 text-xs text-sakura-200 font-bold">Execution Shell</div>
+                        <div id="terminalOutput" class="flex-1 p-4 overflow-y-auto text-xs space-y-2 text-sakura-100">
+                            <div class="text-matcha-300 font-bold">BotWA Base Terminal Ready.</div>
+                        </div>
+                        <div class="p-2.5 bg-sumi-900 border-t border-sumi-800 flex items-center gap-2">
+                            <span class="text-sakura-300 font-bold">❯</span>
+                            <input type="text" id="terminalInput" placeholder="Type .ping, .menu or => 1+1..." class="flex-1 bg-transparent text-xs text-white outline-none">
+                            <button id="btnTerminalSend" class="px-3.5 py-1.5 rounded-xl bg-sakura-400 text-white text-xs font-bold">Run</button>
+                        </div>
+                    </div>
+                </section>
+
+                <section id="view-console" class="view-section hidden h-full">
+                    <div class="h-full flex flex-col bg-white rounded-3xl border border-sakura-100 font-mono">
+                        <div class="px-4 py-2.5 bg-sakura-50 border-b border-sakura-100 text-xs font-bold">Log Stream</div>
+                        <div id="logContent" class="flex-1 p-4 overflow-y-auto text-xs space-y-1 text-sumi-800"></div>
+                    </div>
+                </section>
+
+                <section id="view-plugins" class="view-section hidden space-y-4">
+                    <div class="p-6 bg-white border border-sakura-100 rounded-3xl space-y-4">
+                        <div class="flex items-center justify-between border-b border-sakura-100 pb-3">
+                            <h3 class="font-bold text-base">Active Plugins</h3>
+                            <span id="pluginCountBadge" class="px-3 py-1 rounded-full bg-sakura-100 text-sakura-500 text-xs font-mono font-bold">0 Active</span>
+                        </div>
+                        <div id="pluginGrid" class="grid grid-cols-1 sm:grid-cols-3 gap-3"></div>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="/js/app.js"></script>
+</body>
+</html>
