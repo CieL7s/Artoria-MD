@@ -28,8 +28,8 @@ Dirancang agar ringan, modular, dan mudah dikembangkan — baik oleh pemula maup
 5. [Arsitektur Direktori](#-arsitektur-direktori)
 6. [Sistem Hot Reload](#-sistem-hot-reload)
 7. [Sistem Plugin](#-sistem-plugin)
-8. [Signature Plugin yang Valid](#-signature-plugin-yang-valid)
-9. [Format Plugin: Object Style](#format-1--object-style-export-default)
+8. [Signature Plugin yang Valid](#%EF%B8%8F-signature-plugin-yang-valid)
+9. [Format Plugin: Object Style](#format-1--object-style-export-default-)
 10. [Format Plugin: Handler Style](#format-2--handler-style-handlercommand--)
 11. [Regex Command Support](#-regex-command-support)
 12. [Context Object (ctx)](#-context-object-ctx)
@@ -39,9 +39,11 @@ Dirancang agar ringan, modular, dan mudah dikembangkan — baik oleh pemula maup
 16. [Konfigurasi Bot](#-konfigurasi-bot)
 17. [Daftar Plugin Bawaan](#-daftar-plugin-bawaan)
 18. [Menambah Plugin Baru](#-menambah-plugin-baru)
-19. [Menjalankan di VPS / Server](#-menjalankan-di-vps--server)
-20. [Troubleshooting](#-troubleshooting)
-21. [Lisensi](#-lisensi)
+19. [case.js — Command Handler Tradisional](#-casejs--command-handler-tradisional)
+20. [Menjalankan di VPS / Server](#%EF%B8%8F-menjalankan-di-vps--server)
+21. [Troubleshooting](#-troubleshooting)
+22. [Lisensi](#-lisensi)
+
 
 ---
 
@@ -861,7 +863,52 @@ Bot akan **otomatis mendeteksi** file baru dan me-reload semua plugin dalam wakt
 
 ---
 
+## 🔀 case.js — Command Handler Tradisional
+
+Selain plugin system, Artoria - MD juga mendukung **`case.js`** — file handler berbasis `switch/case` yang dieksekusi **sebelum** plugin system berjalan.
+
+### Kapan Pakai `case.js`?
+- Command built-in sederhana yang tidak perlu file plugin terpisah
+- Ingin override/intercept command tertentu sebelum plugin
+- Logic yang pendek dan tidak perlu hot-reload sendiri
+
+### Cara Kerja
+
+```
+Pesan masuk → case.js dijalankan dulu
+  → return true  : SELESAI (plugin tidak dieksekusi)
+  → return false : lanjut ke plugin system
+```
+
+### Contoh `case.js`
+
+```javascript
+// case.js (di root folder)
+export default async function switchCase(context) {
+    const { command, reply, isOwner } = context;
+
+    switch (command) {
+        case 'info': {
+            await reply('Artoria - MD oleh Nagisa Artoria 🌸');
+            return true;   // ← ditangani di sini, plugin di-skip
+        }
+        case 'secret': {
+            if (!isOwner) return false; // ← lempar ke plugin system
+            await reply('Ini pesan rahasia owner!');
+            return true;
+        }
+        default:
+            return false;  // ← biarkan plugin yang handle
+    }
+}
+```
+
+> ℹ️ File `case.js` sudah tersedia sebagai template di root folder. Kalau file tidak ada, bot tetap berjalan normal tanpa error — plugin system langsung dieksekusi.
+
+---
+
 ## 🖥️ Menjalankan di VPS / Server
+
 
 ### Menggunakan PM2 (Node.js)
 
