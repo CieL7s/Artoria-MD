@@ -25,7 +25,7 @@
     "@hapi/boom": "^10.0.1",
     "@whiskeysockets/baileys": "7.0.0-rc14",
     "acorn": "^8.18.0",
-    "jimp: "^0.22.12",
+    "jimp": "^0.22.12",
     "fflate": "^0.8.2",
     "pino": "^9.0.0",
     "qrcode-terminal": "^0.12.0",
