@@ -17,9 +17,9 @@
     "bun"
   ],
   "scripts": {
-    "start": "bun index.js",
+    "start": "node index.js",
     "dev": "bun index.js",
-    "node": "node index.js"
+    "bun": "bun --watch index.js"
   },
   "dependencies": {
     "@hapi/boom": "^10.0.1",
